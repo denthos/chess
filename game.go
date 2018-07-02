@@ -181,6 +181,22 @@ func (g *Game) MoveStr(s string) error {
 	return g.Move(m)
 }
 
+func (g *Game) ValidateMove(m *Move) error {
+	valid := moveSlice(g.ValidMoves()).find(m)
+	if valid == nil {
+		return fmt.Errorf("chess: invalid move %s", m)
+	}
+	return nil
+}
+
+func (g *Game) ValidateMoveStr(s string) error {
+	m, err := g.notation.Decode(g.pos, s)
+	if err != nil {
+		return err
+	}
+	return g.ValidateMove(m)
+}
+
 // ValidMoves returns a list of valid moves in the
 // current position.
 func (g *Game) ValidMoves() []*Move {
